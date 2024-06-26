@@ -3,10 +3,6 @@ package vento.weather_scraper.model;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Visual Crossing data object.
  */
@@ -89,32 +85,4 @@ public class VisualCrossingRecord implements CsvConvertible {
 
     @SerializedName("moonphase")
     private double moonPhase;
-
-    @Override
-    public CsvRecord toCsvRecord() {
-        final List<Object> values = new ArrayList<>();
-        final Field[] fields = VisualCrossingRecord.class.getDeclaredFields();
-
-        for (Field field : fields) {
-            field.setAccessible(true);
-            try {
-                values.add(field.get(this));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return new CsvRecord(values.toArray());
-    }
-
-    @Override
-    public String[] getCsvHeaders() {
-        final Field[] fields = VisualCrossingRecord.class.getDeclaredFields();
-        final String[] headers = new String[fields.length];
-        for (int i = 0; i < fields.length; i++) {
-            headers[i] = fields[i].getName();
-        }
-
-        return headers;
-    }
 }
