@@ -12,6 +12,12 @@ public class ApplicationConfig {
     @Value("${scheduler.delay}")
     private Long schedulerDelay;
 
+    @Value("${telegram.token}")
+    private String telegramToken;
+
+    @Value("${telegram.chat_id}")
+    private Long telegramChatId;
+
     @Value("${visual_crossing.token}")
     private String visualCrossingToken;
 

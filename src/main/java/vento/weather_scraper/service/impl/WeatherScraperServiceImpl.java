@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import vento.weather_scraper.config.ApplicationConfig;
 import vento.weather_scraper.handler.WeatherApi;
 import vento.weather_scraper.handler.impl.VisualCrossingApi;
+import vento.weather_scraper.service.LoggerService;
 import vento.weather_scraper.service.WeatherScraperService;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class WeatherScraperServiceImpl implements WeatherScraperService {
     @Autowired
+    private LoggerService logger;
+    @Autowired
     private ApplicationConfig config;
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -31,6 +34,7 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
         apiHandlers.add(new VisualCrossingApi("visual_crossing", config.getVisualCrossingToken(), config.getVisualCrossingCoords()));
 
         scheduler.scheduleAtFixedRate(this::fetchWeatherAPIs, 0, config.getSchedulerDelay(), TimeUnit.MINUTES);
+        logger.info("Weather scraper was started.");
     }
 
     @Override
@@ -39,8 +43,7 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
             try {
                 handler.scrapWeather();
             } catch (Exception e) {
-                System.out.println("An error has occurred while scraping data from \"" + handler.getApiName() + "\".");
-                e.printStackTrace();
+                logger.error("Error fetching data from \"" + handler.getApiName() + "\".", e);
             }
         }
     }
@@ -48,5 +51,6 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
     @PreDestroy
     private void shutdown() {
         scheduler.shutdown();
+        logger.info("Weather scraper was stopped.");
     }
 }
