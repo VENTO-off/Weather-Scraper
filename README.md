@@ -22,7 +22,7 @@ conditions from different Weather APIs and save the data in CSV format.
 
 ### Configuration
 
-Update application properties::
+Update `application properties`:
 
 ```properties
 scheduler.delay=5
@@ -31,3 +31,9 @@ telegram.chat_id=YOUR_TELEGRAM_CHAT_ID
 visual_crossing.token=YOUR_VISUAL_CROSSING_API_TOKEN
 visual_crossing.coords=YOUR_VISUAL_CROSSING_COORDINATES
 ```
+
+### Adding a new Weather API
+
+1. Extend `WeatherScraperImpl` to create a new class for the API.
+2. Define the methods `buildQueryURL`, `fetchData`, and `decodeData`.
+3. Register the new API scraper in the `WeatherScraperServiceImpl` class.
