@@ -22,7 +22,7 @@ public class TelegramServiceImpl implements TelegramService {
      *
      * @param message The message to be sent to Telegram.
      */
-    public void sendTelegramMessage(String message) {
+    public void sendMessage(String message) {
         try {
             HttpUtils.callAPI(buildSendMessageQueryURL(URLEncoder.encode(message, StandardCharsets.UTF_8.name())));
         } catch (Exception ignored) {

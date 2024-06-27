@@ -9,5 +9,5 @@ public interface TelegramService {
      *
      * @param message The message to be sent to Telegram.
      */
-    void sendTelegramMessage(String message);
+    void sendMessage(String message);
 }

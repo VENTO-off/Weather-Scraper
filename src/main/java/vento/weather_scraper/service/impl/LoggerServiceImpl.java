@@ -24,7 +24,7 @@ public class LoggerServiceImpl implements LoggerService {
         System.out.println(consoleMessage);
 
         final String telegramMessage = "\uD83D\uDCD7" + " *Info* " + "\n\n" + formatMessageWithMarkdown(message);
-        telegram.sendTelegramMessage(telegramMessage);
+        telegram.sendMessage(telegramMessage);
     }
 
     /**
@@ -41,7 +41,7 @@ public class LoggerServiceImpl implements LoggerService {
         e.printStackTrace(System.out);
 
         final String telegramMessage = "\uD83D\uDCD5" + " *Error* " + "\n\n" + formatMessageWithMarkdown(message);
-        telegram.sendTelegramMessage(telegramMessage);
+        telegram.sendMessage(telegramMessage);
     }
 
     /**
