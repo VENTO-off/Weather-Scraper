@@ -17,11 +17,10 @@ import java.nio.file.Paths;
 public class FileUtils {
 
     public static void writeCSV(String directory, String fileName, CsvConvertible csvRecord) throws CsvException, IOException {
-        final Path path = Paths.get(directory, fileName + ".csv");
+        final Path path = Paths.get(directory.toLowerCase().replaceAll("\\s", "_"), fileName + ".csv");
         Files.createDirectories(path.getParent());
 
         boolean isNewFile = Files.notExists(path);
-
         try (
                 final BufferedWriter writer = Files.newBufferedWriter(path, java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
                 final CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);

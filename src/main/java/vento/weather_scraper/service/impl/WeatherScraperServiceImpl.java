@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import vento.weather_scraper.config.ApplicationConfig;
 import vento.weather_scraper.handler.WeatherApi;
-import vento.weather_scraper.handler.impl.VisualCrossingApi;
+import vento.weather_scraper.handler.impl.VisualCrossingScraper;
 import vento.weather_scraper.service.LoggerService;
 import vento.weather_scraper.service.WeatherScraperService;
 
@@ -31,7 +31,7 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
 
     @PostConstruct
     private void init() {
-        apiHandlers.add(new VisualCrossingApi("visual_crossing", config.getVisualCrossingToken(), config.getVisualCrossingCoords()));
+        apiHandlers.add(new VisualCrossingScraper("Visual crossing", config.getVisualCrossingToken(), config.getVisualCrossingCoords()));
 
         scheduler.scheduleAtFixedRate(this::fetchWeatherAPIs, 0, config.getSchedulerDelay(), TimeUnit.MINUTES);
         logger.info("Weather scraper was started.");

@@ -6,14 +6,14 @@ import vento.weather_scraper.model.VisualCrossingRecord;
 
 import java.time.LocalDate;
 
-public class VisualCrossingApi extends WeatherScraperImpl {
+public class VisualCrossingScraper extends WeatherScraperImpl {
     private final String visualCrossingToken;
     private final String visualCrossingCoords;
 
     /**
      * Visual Crossing constructor.
      */
-    public VisualCrossingApi(String apiName, String visualCrossingToken, String visualCrossingCoords) {
+    public VisualCrossingScraper(String apiName, String visualCrossingToken, String visualCrossingCoords) {
         super(apiName);
         this.visualCrossingToken = visualCrossingToken;
         this.visualCrossingCoords = visualCrossingCoords;
@@ -24,7 +24,9 @@ public class VisualCrossingApi extends WeatherScraperImpl {
      */
     @Override
     public String buildQueryURL() {
-        return String.format("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s?unitGroup=metric&include=current&key=%s&contentType=json", this.visualCrossingCoords, this.visualCrossingToken);
+        return String.format("https://weather.visualcrossing.com/" +
+                "VisualCrossingWebServices/rest/services/timeline/" +
+                "%s?unitGroup=metric&include=current&key=%s&contentType=json", this.visualCrossingCoords, this.visualCrossingToken);
     }
 
     /**
