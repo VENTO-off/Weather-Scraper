@@ -5,9 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CSV Convertible interface.
+ * Interface defining the ability of an object to be converted into a CSV format.
  */
 public interface CsvConvertible {
+
+    /**
+     * Converts this object into a CsvRecord by reflecting over its fields.
+     *
+     * @return CsvRecord containing the values of the object's fields.
+     * @throws RuntimeException if any field is inaccessible.
+     */
     default CsvRecord toCsvRecord() {
         final List<Object> values = new ArrayList<>();
         final Field[] fields = this.getClass().getDeclaredFields();
@@ -23,6 +30,11 @@ public interface CsvConvertible {
         return new CsvRecord(values.toArray());
     }
 
+    /**
+     * Generates an array of headers for a CSV file based on the object's field names.
+     *
+     * @return An array of strings representing the field names, to be used as headers in a CSV file.
+     */
     default String[] getCsvHeaders() {
         Field[] fields = this.getClass().getDeclaredFields();
         String[] headers = new String[fields.length];
@@ -30,6 +42,7 @@ public interface CsvConvertible {
             fields[i].setAccessible(true);
             headers[i] = fields[i].getName();
         }
+
         return headers;
     }
 }

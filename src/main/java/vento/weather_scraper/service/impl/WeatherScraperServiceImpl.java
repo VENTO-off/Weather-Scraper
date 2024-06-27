@@ -17,7 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Weather scraper API service.
+ * Service implementation for scraping weather data from various APIs.
  */
 @Component
 public class WeatherScraperServiceImpl implements WeatherScraperService {
@@ -29,14 +29,19 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final List<WeatherApi> apiHandlers = new ArrayList<>();
 
+    /**
+     * Initializes the service by setting up API handlers and scheduling regular weather data fetch tasks.
+     */
     @PostConstruct
     private void init() {
         apiHandlers.add(new VisualCrossingScraper("Visual crossing", config.getVisualCrossingToken(), config.getVisualCrossingCoords()));
-
         scheduler.scheduleAtFixedRate(this::fetchWeatherAPIs, 0, config.getSchedulerDelay(), TimeUnit.MINUTES);
         logger.info("Weather scraper was started.");
     }
 
+    /**
+     * Fetches weather data from all configured APIs.
+     */
     @Override
     public void fetchWeatherAPIs() {
         for (WeatherApi handler : apiHandlers) {
@@ -48,9 +53,18 @@ public class WeatherScraperServiceImpl implements WeatherScraperService {
         }
     }
 
+    /**
+     * Shuts down the scheduled tasks and cleans up resources before the bean is destroyed.
+     */
     @PreDestroy
     private void shutdown() {
-        scheduler.shutdown();
+        try {
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         logger.info("Weather scraper was stopped.");
     }
 }

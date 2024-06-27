@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * CSV record object.
+ * Class representing a single CSV record.
  */
 @Getter
 @AllArgsConstructor
 public class CsvRecord {
+    /**
+     * Array of objects that represents the fields of the CSV record.
+     */
     private Object[] fields;
 }
