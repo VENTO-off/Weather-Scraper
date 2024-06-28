@@ -7,7 +7,7 @@ import vento.weather_scraper.model.VisualCrossingRecord;
 import java.time.LocalDate;
 
 /**
- * Implements data scraping specifically for the Visual Crossing Weather API.
+ * Implements data scraping specifically for the VisualCrossing API.
  */
 public class VisualCrossingScraper extends WeatherScraperImpl {
     private final String visualCrossingToken;
@@ -17,7 +17,7 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
      * Constructs a VisualCrossingScraper with the necessary authentication and location details.
      *
      * @param apiName The name of the API, used for logging and identification purposes.
-     * @param visualCrossingToken The API token required for accessing Visual Crossing services.
+     * @param visualCrossingToken The API token required for accessing VisualCrossing services.
      * @param visualCrossingCoords The geographical coordinates used for fetching weather data.
      */
     public VisualCrossingScraper(String apiName, String visualCrossingToken, String visualCrossingCoords) {
@@ -27,7 +27,7 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     }
 
     /**
-     * Builds the URL used for fetching weather data from the Visual Crossing API.
+     * Builds the URL used for fetching weather data from the VisualCrossing API.
      *
      * @return A string representing the complete URL for the API request.
      */
@@ -39,7 +39,7 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     }
 
     /**
-     * Decodes the raw JSON data fetched from the Visual Crossing API into a structured CsvConvertible format.
+     * Decodes the raw JSON data fetched from the VisualCrossing API into a structured CsvConvertible format.
      *
      * @param rawData The raw JSON data fetched from the API.
      * @return A CsvConvertible object containing the structured weather data.

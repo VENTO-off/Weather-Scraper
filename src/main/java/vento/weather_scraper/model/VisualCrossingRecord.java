@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 /**
- * Represents a weather record from Visual Crossing Weather API.
+ * Represents a weather record from VisualCrossing API.
  */
 @Data
 public class VisualCrossingRecord implements CsvConvertible {

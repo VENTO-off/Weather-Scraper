@@ -2,7 +2,7 @@ package vento.weather_scraper.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vento.weather_scraper.config.ApplicationConfig;
+import vento.weather_scraper.config.TelegramConfig;
 import vento.weather_scraper.service.TelegramService;
 import vento.weather_scraper.utils.HttpUtils;
 
@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class TelegramServiceImpl implements TelegramService {
     @Autowired
-    private ApplicationConfig config;
+    private TelegramConfig config;
 
     /**
      * Sends a message to a Telegram chat using the configured bot.
@@ -37,8 +37,8 @@ public class TelegramServiceImpl implements TelegramService {
      */
     private String buildSendMessageQueryURL(String text) {
         return String.format("https://api.telegram.org/bot%s/sendMessage?chat_id=%d&text=%s&parse_mode=markdown",
-                config.getTelegramToken(),
-                config.getTelegramChatId(),
+                config.getToken(),
+                config.getChatId(),
                 text);
     }
 }
