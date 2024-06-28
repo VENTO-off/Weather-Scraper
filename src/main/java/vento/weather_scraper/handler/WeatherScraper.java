@@ -7,6 +7,8 @@ import vento.weather_scraper.model.CsvConvertible;
  */
 public interface WeatherScraper {
 
+    void startScheduler(long delay);
+
     /**
      * Builds the query URL for fetching weather data.
      *

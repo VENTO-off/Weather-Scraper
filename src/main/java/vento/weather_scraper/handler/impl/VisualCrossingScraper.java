@@ -7,6 +7,7 @@ import vento.weather_scraper.config.VisualCrossingConfig;
 import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.VisualCrossingRecord;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 
 /**
@@ -17,11 +18,9 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     @Autowired
     private VisualCrossingConfig config;
 
-    /**
-     * Initializes a VisualCrossingScraper with the necessary configuration parameters.
-     */
-    public VisualCrossingScraper() {
-        setSchedulerDelay(config.getDelay());
+    @PostConstruct
+    public void init() {
+        startScheduler(config.getDelay());
     }
 
     /**

@@ -2,7 +2,6 @@ package vento.weather_scraper.handler.impl;
 
 import com.google.gson.Gson;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import vento.weather_scraper.handler.WeatherApi;
 import vento.weather_scraper.handler.WeatherScraper;
@@ -11,7 +10,6 @@ import vento.weather_scraper.service.LoggerService;
 import vento.weather_scraper.utils.FileUtils;
 import vento.weather_scraper.utils.HttpUtils;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,9 +25,6 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     @Autowired
     private LoggerService logger;
 
-    @Setter
-    private Long schedulerDelay;
-
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Getter
@@ -38,12 +33,9 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     @Getter
     private final Gson gson = new Gson();
 
-    /**
-     * Initializes the service by setting up API handler and scheduling regular weather data fetch tasks.
-     */
-    @PostConstruct
-    private void init() {
-        scheduler.scheduleAtFixedRate(this::scrapWeather, 0, schedulerDelay, TimeUnit.MINUTES);
+    @Override
+    public void startScheduler(long delay) {
+        scheduler.scheduleAtFixedRate(this::scrapWeather, 0, delay, TimeUnit.MINUTES);
     }
 
     /**
