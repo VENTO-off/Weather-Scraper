@@ -25,15 +25,29 @@ conditions from different Weather APIs and save the data in CSV format.
 Update `application properties`:
 
 ```properties
-scheduler.delay=5
+#
+# Telegram settings
+#
 telegram.token=YOUR_TELEGRAM_BOT_TOKEN
-telegram.chat_id=YOUR_TELEGRAM_CHAT_ID
-visual_crossing.token=YOUR_VISUAL_CROSSING_API_TOKEN
-visual_crossing.coords=YOUR_VISUAL_CROSSING_COORDINATES
+telegram.chat-id=YOUR_TELEGRAM_CHAT_ID
+#
+# Visual Crossing settings
+#
+visual-crossing.delay=SCHEDULER_DELAY
+visual-crossing.token=YOUR_VISUAL_CROSSING_API_TOKEN
+visual-crossing.coords=YOUR_VISUAL_CROSSING_COORDINATES
+#
+# OpenWeatherMap
+#
+open-weather-map.delay=SCHEDULER_DELAY
+open-weather-map.token=YOUR_OPEN_WEATHER_MAP_API_TOKEN
+open-weather-map.latitude=YOUR_OPEN_WEATHER_MAP_LATITUDE
+open-weather-map.longitude=YOUR_OPEN_WEATHER_MAP_LONGITUDE
+
 ```
 
 ### Adding a new Weather API
 
-1. Extend `WeatherScraperImpl` to create a new class for the API.
-2. Define the methods `buildQueryURL`, `fetchData`, and `decodeData`.
-3. Register the new API scraper in the `WeatherScraperServiceImpl` class.
+1. Create a configuration class inside `config` directory.
+2. Extend `WeatherScraperImpl` to create a new class for the API.
+3. Define the methods `@PostConstruct`, `buildQueryURL`, `fetchData`, and `decodeData`.
