@@ -3,11 +3,15 @@ package vento.weather_scraper.model;
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a weather record from VisualCrossing API.
  */
 @Data
 public class VisualCrossingRecord implements CsvConvertible {
+    private String timestamp = LocalDateTime.now().toString();
+
     @SerializedName("datetime")
     private String datetime;
     @SerializedName("datetimeEpoch")

@@ -3,22 +3,22 @@ package vento.weather_scraper.handler.impl;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import vento.weather_scraper.config.VisualCrossingConfig;
+import vento.weather_scraper.config.OpenWeatherMapConfig;
 import vento.weather_scraper.model.CsvConvertible;
-import vento.weather_scraper.model.VisualCrossingRecord;
+import vento.weather_scraper.model.OpenWeatherMapRecord;
 
 import javax.annotation.PostConstruct;
 
 /**
- * Implements data scraping specifically for the VisualCrossing API.
+ * Implements data scraping specifically for the OpenWeatherMap API.
  */
 @Component
-public class VisualCrossingScraper extends WeatherScraperImpl {
+public class OpenWeatherMapScraper extends WeatherScraperImpl {
     @Autowired
-    private VisualCrossingConfig config;
+    private OpenWeatherMapConfig config;
 
     /**
-     * Initializes the VisualCrossingScraper by starting the scheduler with the configured delay.
+     * Initializes the OpenWeatherMapScraper by starting the scheduler with the configured delay.
      */
     @PostConstruct
     public void init() {
@@ -26,21 +26,22 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     }
 
     /**
-     * Builds the URL used for fetching weather data from the VisualCrossing API.
+     * Builds the URL used for fetching weather data from the OpenWeatherMap API.
      *
      * @return A string representing the complete URL for the API request.
      */
     @Override
     public String buildQueryURL() {
         return String.format(
-                "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s?unitGroup=metric&include=current&key=%s&contentType=json",
-                config.getCoords(),
+                "https://api.openweathermap.org/data/3.0/onecall?lat=%s&lon=%s&exclude=minutely,hourly,daily,alerts&units=metric&appid=%s",
+                config.getLatitude(),
+                config.getLongitude(),
                 config.getToken()
         );
     }
 
     /**
-     * Decodes the raw JSON data fetched from the VisualCrossing API into a structured CsvConvertible format.
+     * Decodes the raw JSON data fetched from the OpenWeatherMap API into a structured CsvConvertible format.
      *
      * @param rawData The raw JSON data fetched from the API.
      * @return A CsvConvertible object containing the structured weather data.
@@ -48,8 +49,8 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     @Override
     public CsvConvertible decodeData(String rawData) {
         final JsonObject jsonObject = getGson().fromJson(rawData, JsonObject.class);
-        final JsonObject currentConditions = jsonObject.get("currentConditions").getAsJsonObject();
+        final JsonObject current = jsonObject.get("current").getAsJsonObject();
 
-        return getGson().fromJson(currentConditions, VisualCrossingRecord.class);
+        return getGson().fromJson(current, OpenWeatherMapRecord.class);
     }
 }

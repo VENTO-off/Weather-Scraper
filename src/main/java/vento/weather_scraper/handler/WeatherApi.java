@@ -1,5 +1,7 @@
 package vento.weather_scraper.handler;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Interface for the operational control of a weather data scraping process.
  */
@@ -18,11 +20,10 @@ public interface WeatherApi {
      * @return The name of the API service.
      */
     default String getApiName() {
-        final String apiName = getClass().getSimpleName().replaceAll("([A-Z])", "_$1").toLowerCase();
-        if (apiName.startsWith("_")) {
-            return apiName.substring(1);
-        }
-
-        return apiName;
+        return StringUtils.capitalize(getClass().getSimpleName()
+                .replaceAll("([A-Z])", " $1")
+                .replaceAll("\\s+\\S+$", "")
+                .toLowerCase().trim()
+        );
     }
 }

@@ -15,6 +15,7 @@ import java.nio.file.Paths;
  * Utility class for file operations, specifically for working with CSV files.
  */
 public class FileUtils {
+    private static final String dataDirectory = "datasets";
 
     /**
      * Writes data from a CsvConvertible object to a CSV file located in the specified directory and file name.
@@ -27,7 +28,7 @@ public class FileUtils {
      * @throws IOException  If an I/O error occurs when opening or creating the file.
      */
     public static void writeCSV(String directory, String fileName, CsvConvertible csvRecord) throws CsvException, IOException {
-        final Path path = Paths.get(directory.toLowerCase().replaceAll("\\s", "_"), fileName + ".csv");
+        final Path path = Paths.get(dataDirectory, directory.toLowerCase().replaceAll("\\s", "_"), fileName + ".csv");
         Files.createDirectories(path.getParent());
 
         boolean isNewFile = Files.notExists(path);
