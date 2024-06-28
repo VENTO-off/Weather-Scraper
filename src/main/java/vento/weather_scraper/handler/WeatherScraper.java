@@ -7,6 +7,11 @@ import vento.weather_scraper.model.CsvConvertible;
  */
 public interface WeatherScraper {
 
+    /**
+     * Starts the scheduler to fetch weather data at regular intervals.
+     *
+     * @param delay The delay in minutes between consecutive fetch operations.
+     */
     void startScheduler(long delay);
 
     /**

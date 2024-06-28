@@ -33,6 +33,11 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     @Getter
     private final Gson gson = new Gson();
 
+    /**
+     * Starts the scheduler to fetch weather data at regular intervals.
+     *
+     * @param delay The delay in minutes between consecutive fetch operations.
+     */
     @Override
     public void startScheduler(long delay) {
         scheduler.scheduleAtFixedRate(this::scrapWeather, 0, delay, TimeUnit.MINUTES);

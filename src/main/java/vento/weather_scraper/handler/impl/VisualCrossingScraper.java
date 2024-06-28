@@ -18,6 +18,9 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     @Autowired
     private VisualCrossingConfig config;
 
+    /**
+     * Initializes the VisualCrossingScraper by starting the scheduler with the configured delay.
+     */
     @PostConstruct
     public void init() {
         startScheduler(config.getDelay());
