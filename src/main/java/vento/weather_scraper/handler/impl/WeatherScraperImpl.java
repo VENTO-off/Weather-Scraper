@@ -1,55 +1,63 @@
 package vento.weather_scraper.handler.impl;
 
 import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import vento.weather_scraper.handler.WeatherApi;
 import vento.weather_scraper.handler.WeatherScraper;
 import vento.weather_scraper.model.CsvConvertible;
+import vento.weather_scraper.service.LoggerService;
 import vento.weather_scraper.utils.FileUtils;
 import vento.weather_scraper.utils.HttpUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Abstract base class for implementing weather data scraper services.
  * Provides a common framework for fetching, decoding, and saving weather data from various APIs.
  */
 public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
-    private final String apiName;
-    protected final DateTimeFormatter formatter;
-    protected final Gson gson;
+    @Autowired
+    private LoggerService logger;
+
+    @Setter
+    private Long schedulerDelay;
+
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+    @Getter
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    @Getter
+    private final Gson gson = new Gson();
 
     /**
-     * Constructs a new WeatherScraperImpl with the specified API name.
-     *
-     * @param apiName the name of the API service this scraper is associated with.
+     * Initializes the service by setting up API handler and scheduling regular weather data fetch tasks.
      */
-    public WeatherScraperImpl(String apiName) {
-        this.apiName = apiName;
-        this.formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        this.gson = new Gson();
+    @PostConstruct
+    private void init() {
+        scheduler.scheduleAtFixedRate(this::scrapWeather, 0, schedulerDelay, TimeUnit.MINUTES);
     }
 
     /**
      * Executes the process of fetching, decoding, and saving weather data.
-     *
-     * @throws Exception if an error occurs during the scraping process.
      */
     @Override
-    public void scrapWeather() throws Exception {
-        final String fetchedData = this.fetchData();
-        final CsvConvertible decodedData = this.decodeData(fetchedData);
-        this.saveData(decodedData);
-    }
-
-    /**
-     * Returns the name of the API service.
-     *
-     * @return the name of the API.
-     */
-    @Override
-    public String getApiName() {
-        return this.apiName;
+    public void scrapWeather() {
+        try {
+            final String fetchedData = fetchData();
+            final CsvConvertible decodedData = decodeData(fetchedData);
+            saveData(decodedData);
+        } catch (Exception e) {
+            logger.error("Error fetching data from \"" + getApiName() + "\".", e);
+        }
     }
 
     /**
@@ -71,6 +79,20 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
      */
     @Override
     public void saveData(CsvConvertible csvRecord) throws Exception {
-        FileUtils.writeCSV(apiName, formatter.format(LocalDate.now()), csvRecord);
+        FileUtils.writeCSV(getApiName(), formatter.format(LocalDate.now()), csvRecord);
+    }
+
+    /**
+     * Shuts down the scheduled tasks and cleans up resources before the bean is destroyed.
+     */
+    @PreDestroy
+    private void shutdown() {
+        try {
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

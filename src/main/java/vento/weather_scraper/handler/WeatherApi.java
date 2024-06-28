@@ -6,7 +6,7 @@ package vento.weather_scraper.handler;
 public interface WeatherApi {
     /**
      * Executes the weather data scraping process.
-     * This method should handle the entire process of fetching, decoding, and saving weather data.
+     * This method handles the entire process of fetching, decoding, and saving weather data.
      *
      * @throws Exception to cover all exceptions that might occur during the scraping process, from network to storage.
      */
@@ -17,5 +17,12 @@ public interface WeatherApi {
      *
      * @return The name of the API service.
      */
-    String getApiName();
+    default String getApiName() {
+        final String apiName = getClass().getSimpleName().replaceAll("([A-Z])", "_$1").toLowerCase();
+        if (apiName.startsWith("_")) {
+            return apiName.substring(1);
+        }
+
+        return apiName;
+    }
 }

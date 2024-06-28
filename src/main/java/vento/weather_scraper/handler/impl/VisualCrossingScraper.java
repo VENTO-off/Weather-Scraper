@@ -1,6 +1,9 @@
 package vento.weather_scraper.handler.impl;
 
 import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import vento.weather_scraper.config.VisualCrossingConfig;
 import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.VisualCrossingRecord;
 
@@ -9,21 +12,16 @@ import java.time.LocalDate;
 /**
  * Implements data scraping specifically for the VisualCrossing API.
  */
+@Component
 public class VisualCrossingScraper extends WeatherScraperImpl {
-    private final String visualCrossingToken;
-    private final String visualCrossingCoords;
+    @Autowired
+    private VisualCrossingConfig config;
 
     /**
-     * Constructs a VisualCrossingScraper with the necessary authentication and location details.
-     *
-     * @param apiName The name of the API, used for logging and identification purposes.
-     * @param visualCrossingToken The API token required for accessing VisualCrossing services.
-     * @param visualCrossingCoords The geographical coordinates used for fetching weather data.
+     * Initializes a VisualCrossingScraper with the necessary configuration parameters.
      */
-    public VisualCrossingScraper(String apiName, String visualCrossingToken, String visualCrossingCoords) {
-        super(apiName);
-        this.visualCrossingToken = visualCrossingToken;
-        this.visualCrossingCoords = visualCrossingCoords;
+    public VisualCrossingScraper() {
+        setSchedulerDelay(config.getDelay());
     }
 
     /**
@@ -35,7 +33,7 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
     public String buildQueryURL() {
         return String.format("https://weather.visualcrossing.com/" +
                 "VisualCrossingWebServices/rest/services/timeline/" +
-                "%s?unitGroup=metric&include=current&key=%s&contentType=json", this.visualCrossingCoords, this.visualCrossingToken);
+                "%s?unitGroup=metric&include=current&key=%s&contentType=json", config.getCoords(), config.getToken());
     }
 
     /**
@@ -46,10 +44,10 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
      */
     @Override
     public CsvConvertible decodeData(String rawData) {
-        final JsonObject jsonObject = super.gson.fromJson(rawData, JsonObject.class);
+        final JsonObject jsonObject = getGson().fromJson(rawData, JsonObject.class);
         final JsonObject currentConditions = jsonObject.get("currentConditions").getAsJsonObject();
-        final VisualCrossingRecord decodedData = super.gson.fromJson(currentConditions, VisualCrossingRecord.class);
-        decodedData.setDatetime(super.formatter.format(LocalDate.now()).concat(" ").concat(decodedData.getDatetime()));
+        final VisualCrossingRecord decodedData = getGson().fromJson(currentConditions, VisualCrossingRecord.class);
+        decodedData.setDatetime(getFormatter().format(LocalDate.now()).concat(" ").concat(decodedData.getDatetime()));
 
         return decodedData;
     }
