@@ -15,7 +15,7 @@ public class VisualCrossingConfig {
     /**
      * Delay for scheduler in minutes. Configured in application properties.
      */
-    private Long delay;
+    private Integer delay;
 
     /**
      * Token for accessing the VisualCrossing API. Configured in application properties.

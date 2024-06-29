@@ -49,5 +49,6 @@ open-weather-map.longitude=YOUR_OPEN_WEATHER_MAP_LONGITUDE
 ### Adding a new Weather API
 
 1. Create a configuration class inside `config` directory.
-2. Extend `WeatherScraperImpl` to create a new class for the API.
-3. Define the methods `@PostConstruct`, `buildQueryURL`, `fetchData`, and `decodeData`.
+2. Create a new weather model class inside `model` directory which implements `CsvConvertible`.
+3. Extend `WeatherScraperImpl` to create a new class for the API.
+4. Define the class constructor with methods `buildQueryURL` and `decodeData`.

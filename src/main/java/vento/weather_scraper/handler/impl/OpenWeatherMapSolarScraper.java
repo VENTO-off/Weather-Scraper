@@ -9,7 +9,6 @@ import vento.weather_scraper.config.OpenWeatherMapConfig;
 import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.OpenWeatherMapSolarRecord;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +18,16 @@ import java.util.List;
  */
 @Component
 public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
-    @Autowired
-    private OpenWeatherMapConfig config;
+    private final OpenWeatherMapConfig config;
 
     private LocalDate lastFetchTime = LocalDate.now();
 
     /**
-     * Initializes the OpenWeatherMapSolarScraper by starting the scheduler with the configured delay.
+     * Initializes the OpenWeatherMapSolarScraper with the necessary configuration.
      */
-    @PostConstruct
-    public void init() {
-        startScheduler(config.getDelay());
+    public OpenWeatherMapSolarScraper(@Autowired OpenWeatherMapConfig config) {
+        this.config = config;
+        setFetchDelay(config.getDelay());
     }
 
     /**

@@ -10,13 +10,6 @@ import java.util.List;
 public interface WeatherScraper {
 
     /**
-     * Starts the scheduler to fetch weather data at regular intervals.
-     *
-     * @param delay The delay in minutes between consecutive fetch operations.
-     */
-    void startScheduler(long delay);
-
-    /**
      * Builds the query URL for fetching weather data.
      *
      * @return The fully constructed URL as a String.

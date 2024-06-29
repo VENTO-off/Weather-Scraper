@@ -2,6 +2,7 @@ package vento.weather_scraper.handler.impl;
 
 import com.google.gson.Gson;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import vento.weather_scraper.handler.WeatherApi;
 import vento.weather_scraper.handler.WeatherScraper;
@@ -10,8 +11,10 @@ import vento.weather_scraper.service.LoggerService;
 import vento.weather_scraper.utils.FileUtils;
 import vento.weather_scraper.utils.HttpUtils;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -34,14 +37,15 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     @Getter
     private final Gson gson = new Gson();
 
+    @Setter
+    private int fetchDelay;
+
     /**
      * Starts the scheduler to fetch weather data at regular intervals.
-     *
-     * @param delay The delay in minutes between consecutive fetch operations.
      */
-    @Override
-    public void startScheduler(long delay) {
-        scheduler.scheduleAtFixedRate(this::scrapWeather, 0, delay, TimeUnit.MINUTES);
+    @PostConstruct
+    public void init() {
+        scheduler.scheduleAtFixedRate(this::scrapWeather, 0, 1, TimeUnit.MINUTES);
     }
 
     /**
@@ -49,6 +53,10 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
      */
     @Override
     public void scrapWeather() {
+        if (LocalDateTime.now().getMinute() % fetchDelay != 0) {
+            return;
+        }
+
         try {
             final String fetchedData = fetchData();
             final List<CsvConvertible> decodedData = decodeData(fetchedData);

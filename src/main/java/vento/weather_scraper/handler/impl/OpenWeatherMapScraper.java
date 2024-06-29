@@ -7,7 +7,6 @@ import vento.weather_scraper.config.OpenWeatherMapConfig;
 import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.OpenWeatherMapRecord;
 
-import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,15 +15,14 @@ import java.util.List;
  */
 @Component
 public class OpenWeatherMapScraper extends WeatherScraperImpl {
-    @Autowired
-    private OpenWeatherMapConfig config;
+    private final OpenWeatherMapConfig config;
 
     /**
-     * Initializes the OpenWeatherMapScraper by starting the scheduler with the configured delay.
+     * Initializes the OpenWeatherMapScraper with the necessary configuration.
      */
-    @PostConstruct
-    public void init() {
-        startScheduler(config.getDelay());
+    public OpenWeatherMapScraper(@Autowired OpenWeatherMapConfig config) {
+        this.config = config;
+        setFetchDelay(config.getDelay());
     }
 
     /**

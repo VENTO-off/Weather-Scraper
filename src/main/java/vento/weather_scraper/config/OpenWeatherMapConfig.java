@@ -15,7 +15,7 @@ public class OpenWeatherMapConfig {
     /**
      * Delay for scheduler in minutes. Configured in application properties.
      */
-    private Long delay;
+    private Integer delay;
 
     /**
      * Token for accessing the OpenWeatherMap API. Configured in application properties.
