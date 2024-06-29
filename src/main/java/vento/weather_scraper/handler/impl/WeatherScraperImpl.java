@@ -13,6 +13,7 @@ import vento.weather_scraper.utils.HttpUtils;
 import javax.annotation.PreDestroy;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +51,7 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     public void scrapWeather() {
         try {
             final String fetchedData = fetchData();
-            final CsvConvertible decodedData = decodeData(fetchedData);
+            final List<CsvConvertible> decodedData = decodeData(fetchedData);
             saveData(decodedData);
         } catch (Exception e) {
             logger.error("Error fetching data from \"" + getApiName() + "\".", e);
@@ -71,12 +72,12 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     /**
      * Saves the decoded data to a CSV file using the provided CsvConvertible record.
      *
-     * @param csvRecord the CsvConvertible data to be saved.
+     * @param csvRecords The list of CsvConvertible objects to be saved.
      * @throws Exception if there is an error during file writing.
      */
     @Override
-    public void saveData(CsvConvertible csvRecord) throws Exception {
-        FileUtils.writeCSV(getApiName(), formatter.format(LocalDate.now()), csvRecord);
+    public void saveData(List<CsvConvertible> csvRecords) throws Exception {
+        FileUtils.writeCSV(getApiName(), formatter.format(LocalDate.now()), csvRecords);
     }
 
     /**

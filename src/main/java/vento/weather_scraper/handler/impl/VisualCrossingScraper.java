@@ -8,6 +8,8 @@ import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.VisualCrossingRecord;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements data scraping specifically for the VisualCrossing API.
@@ -43,13 +45,14 @@ public class VisualCrossingScraper extends WeatherScraperImpl {
      * Decodes the raw JSON data fetched from the VisualCrossing API into a structured CsvConvertible format.
      *
      * @param rawData The raw JSON data fetched from the API.
-     * @return A CsvConvertible object containing the structured weather data.
+     * @return A list of CsvConvertible objects containing the structured weather data.
      */
     @Override
-    public CsvConvertible decodeData(String rawData) {
+    public List<CsvConvertible> decodeData(String rawData) {
         final JsonObject jsonObject = getGson().fromJson(rawData, JsonObject.class);
         final JsonObject currentConditions = jsonObject.get("currentConditions").getAsJsonObject();
+        final VisualCrossingRecord record = getGson().fromJson(currentConditions, VisualCrossingRecord.class);
 
-        return getGson().fromJson(currentConditions, VisualCrossingRecord.class);
+        return Collections.singletonList(record);
     }
 }

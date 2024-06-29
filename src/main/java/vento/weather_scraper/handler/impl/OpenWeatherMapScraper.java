@@ -8,6 +8,8 @@ import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.OpenWeatherMapRecord;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements data scraping specifically for the OpenWeatherMap API.
@@ -44,13 +46,14 @@ public class OpenWeatherMapScraper extends WeatherScraperImpl {
      * Decodes the raw JSON data fetched from the OpenWeatherMap API into a structured CsvConvertible format.
      *
      * @param rawData The raw JSON data fetched from the API.
-     * @return A CsvConvertible object containing the structured weather data.
+     * @return A list of CsvConvertible objects containing the structured weather data.
      */
     @Override
-    public CsvConvertible decodeData(String rawData) {
+    public List<CsvConvertible> decodeData(String rawData) {
         final JsonObject jsonObject = getGson().fromJson(rawData, JsonObject.class);
         final JsonObject current = jsonObject.get("current").getAsJsonObject();
+        final OpenWeatherMapRecord record = getGson().fromJson(current, OpenWeatherMapRecord.class);
 
-        return getGson().fromJson(current, OpenWeatherMapRecord.class);
+        return Collections.singletonList(record);
     }
 }
