@@ -22,12 +22,25 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
     @Autowired
     private OpenWeatherMapConfig config;
 
+    private LocalDate lastFetchTime = LocalDate.now();
+
     /**
      * Initializes the OpenWeatherMapSolarScraper by starting the scheduler with the configured delay.
      */
     @PostConstruct
     public void init() {
         startScheduler(config.getDelay());
+    }
+
+    /**
+     * Executes the process of fetching, decoding, and saving weather data when a new day starts.
+     */
+    @Override
+    public void scrapWeather() {
+        if (LocalDate.now().isAfter(lastFetchTime)) {
+            super.scrapWeather();
+            lastFetchTime = LocalDate.now();
+        }
     }
 
     /**
