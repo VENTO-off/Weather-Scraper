@@ -3,15 +3,13 @@ package vento.weather_scraper.model;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * Represents a weather record from OpenWeatherMap Solar Irradiance API.
  */
 @Data
 @Builder
 public class OpenWeatherMapSolarRecord implements CsvConvertible {
-    private String timestamp = LocalDateTime.now().toString();
+    private String timestamp;
 
     private String startTime;
 
