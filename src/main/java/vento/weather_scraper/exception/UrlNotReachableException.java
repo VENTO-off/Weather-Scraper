@@ -8,10 +8,11 @@ public class UrlNotReachableException extends Exception {
     /**
      * Constructs a new UrlNotReachableException with a formatted message that includes the problematic URL.
      *
-     * @param url The URL that could not be reached, triggering this exception.
+     * @param url   The URL that could not be reached, triggering this exception.
+     * @param cause The underlying cause of the exception.
      */
-    public UrlNotReachableException(String url) {
-        super(String.format("An error has occurred while connecting to URL: %s", url));
+    public UrlNotReachableException(String url, Throwable cause) {
+        super(String.format("An error has occurred while connecting to URL: %s", url), cause);
     }
 
     /**

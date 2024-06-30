@@ -49,7 +49,7 @@ public class FileUtils {
             }
             csvPrinter.flush();
         } catch (IOException e) {
-            throw new CsvException(fileName);
+            throw new CsvException(fileName, e);
         }
     }
 }

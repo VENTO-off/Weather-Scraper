@@ -36,7 +36,7 @@ public class HttpUtils {
                 throw new UrlNotReachableException(apiURL, statusCode);
             }
         } catch (Exception e) {
-            throw new UrlNotReachableException(apiURL);
+            throw new UrlNotReachableException(apiURL, e);
         }
     }
 }
