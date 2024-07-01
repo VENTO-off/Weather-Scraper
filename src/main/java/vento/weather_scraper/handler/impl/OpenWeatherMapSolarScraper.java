@@ -10,7 +10,7 @@ import vento.weather_scraper.model.CsvConvertible;
 import vento.weather_scraper.model.OpenWeatherMapSolarRecord;
 import vento.weather_scraper.utils.FileUtils;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
     private final OpenWeatherMapConfig config;
 
-    private LocalDateTime lastFetchTimestamp = LocalDateTime.now().withHour(0).withMinute(15);
+    private LocalDate lastFetchDate = LocalDate.now();
 
     /**
      * Initializes the OpenWeatherMapSolarScraper with the necessary configuration.
@@ -36,7 +36,7 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
      */
     @Override
     public void scrapWeather() {
-        if (LocalDateTime.now().isAfter(lastFetchTimestamp)) {
+        if (LocalDate.now().isAfter(lastFetchDate)) {
             super.scrapWeather();
             // Update lastFetchDate after successful save only.
         }
@@ -53,7 +53,7 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
                 "https://api.openweathermap.org/energy/1.0/solar/interval_data?lat=%s&lon=%s&date=%s&interval=15m&appid=%s",
                 config.getLatitude(),
                 config.getLongitude(),
-                lastFetchTimestamp.toLocalDate().toString(),
+                lastFetchDate.toString(),
                 config.getToken()
         );
     }
@@ -74,7 +74,7 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
         for (JsonElement intervalElement : intervals) {
             final JsonObject interval = intervalElement.getAsJsonObject();
             records.add(OpenWeatherMapSolarRecord.builder()
-                    .timestamp(lastFetchTimestamp.toLocalDate().toString())
+                    .timestamp(lastFetchDate.toString())
                     .startTime(interval.get("start").getAsString())
                     .endTime(interval.get("end").getAsString())
                     .clearSkyGHI(interval.getAsJsonObject("clear_sky").get("ghi").getAsDouble())
@@ -97,7 +97,7 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
      */
     @Override
     public void saveData(List<CsvConvertible> csvRecords) throws Exception {
-        FileUtils.writeCSV(getApiName(), getFormatter().format(lastFetchTimestamp), csvRecords);
-        lastFetchTimestamp = LocalDateTime.now();
+        FileUtils.writeCSV(getApiName(), getFormatter().format(lastFetchDate), csvRecords);
+        lastFetchDate = LocalDate.now();
     }
 }

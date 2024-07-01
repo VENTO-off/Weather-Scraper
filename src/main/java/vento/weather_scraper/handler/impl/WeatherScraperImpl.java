@@ -32,7 +32,7 @@ public abstract class WeatherScraperImpl implements WeatherApi, WeatherScraper {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @Getter
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Getter
     private final Gson gson = new Gson();
