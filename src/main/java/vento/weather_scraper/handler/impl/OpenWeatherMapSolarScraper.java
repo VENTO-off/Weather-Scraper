@@ -11,6 +11,8 @@ import vento.weather_scraper.model.OpenWeatherMapSolarRecord;
 import vento.weather_scraper.utils.FileUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
      */
     @Override
     public void scrapWeather() {
-        if (LocalDate.now().isAfter(lastFetchDate)) {
+        if (LocalDate.now().isAfter(lastFetchDate) && LocalDateTime.now().toLocalTime().isAfter(LocalTime.of(0, 10))) {
             super.scrapWeather();
             // Update lastFetchDate after successful save only.
         }
@@ -98,6 +100,6 @@ public class OpenWeatherMapSolarScraper extends WeatherScraperImpl {
     @Override
     public void saveData(List<CsvConvertible> csvRecords) throws Exception {
         FileUtils.writeCSV(getApiName(), getFormatter().format(lastFetchDate), csvRecords);
-        lastFetchDate = LocalDate.now();
+        lastFetchDate = LocalDate.now();    // Update lastFetchDate after successful save
     }
 }
